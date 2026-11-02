@@ -1,0 +1,7 @@
+node_modules/
+.vercel/
+.env*
+raw/
+raw48/
+tmp_story/
+*.log

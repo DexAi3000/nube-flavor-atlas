@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="only dark">
+<meta name="theme-color" content="#050608">
+<title>NUBE — Flavor Atlas</title>
+<meta name="description" content="NUBE: an infinite, drag-to-explore atlas of nicotine salts, pods and mods.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=19">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- the board -->
+<main id="stage" aria-label="Flavor atlas">
+  <div id="grain" aria-hidden="true"></div>
+  <div id="world"><div id="deco"></div><div id="tiles"></div></div>
+  <div id="vign" aria-hidden="true"></div>
+</main>
+
+<!-- chrome -->
+<header class="ui top">
+  <a class="brand" href="#" id="home" aria-label="NUBE, back to the centre">
+    <b>NUBE</b><span>Flavor Atlas<br>Vol. 01</span>
+  </a>
+  <nav class="chips" aria-label="Filter">
+    <button type="button" class="chip on" data-f="all">All <sup>13</sup></button>
+    <button type="button" class="chip" data-f="salt">Salts <sup>08</sup></button>
+    <button type="button" class="chip" data-f="pod">Pods <sup>03</sup></button>
+    <button type="button" class="chip" data-f="mod">Mods <sup>02</sup></button>
+  </nav>
+  <div class="top-r">
+    <button type="button" class="findbtn" id="findBtn"><i>✦</i>Find <span>my flavor</span></button>
+  <button type="button" class="bagbtn" id="bagBtn" aria-expanded="false" aria-controls="bag">Bag <span id="bagN">0</span></button>
+  </div>
+</header>
+
+<aside id="bag" class="ui" hidden aria-label="Bag">
+  <div class="bag-h"><b>Your bag</b><button type="button" class="x" id="bagX" aria-label="Close bag">×</button></div>
+  <ul id="bagList"></ul>
+  <div class="bag-f"><span>Total</span><b id="bagT">$0</b></div>
+  <p class="fine">Portfolio demo. Checkout is disabled.</p>
+</aside>
+
+<div id="cur" aria-hidden="true"><span>Drag</span></div>
+
+<!-- detail -->
+<section id="detail" aria-modal="true" role="dialog" aria-labelledby="dName" hidden>
+  <div class="d-media" id="dMedia"></div>
+  <div class="d-shade" aria-hidden="true"></div>
+  <div class="d-info">
+    <p class="d-kick"><span id="dNo">N°01</span><span id="dKind">Nicotine salt · 30 ml</span></p>
+    <h2 id="dName">Mango Ice</h2>
+    <p class="d-desc" id="dDesc"></p>
+    <div class="d-spec" id="dSpec"></div>
+    <div class="d-opt" id="dOpt"></div>
+    <div class="d-buy">
+      <b id="dPrice">$14</b>
+      <button type="button" class="add" id="dAdd">Add to bag</button>
+      <button type="button" class="d-story" id="dStory" hidden>Watch the story</button>
+    </div>
+  </div>
+  <div class="d-nav">
+    <button type="button" id="dPrev" aria-label="Previous"><i>←</i><span></span></button>
+    <button type="button" id="dNext" aria-label="Next"><span></span><i>→</i></button>
+  </div>
+  <button type="button" class="d-close" id="dClose" aria-label="Close">×</button>
+</section>
+
+<!-- flavor finder -->
+<section id="finder" role="dialog" aria-modal="true" aria-label="Find your flavor" hidden>
+  <div class="f-glow" id="fGlow" aria-hidden="true"></div>
+  <div class="g-grain" aria-hidden="true"></div>
+  <div class="f-top">
+    <p class="f-title">Find your flavor <span id="fCount">01 / 04</span></p>
+    <button type="button" class="d-close" id="fClose" aria-label="Close">×</button>
+  </div>
+  <div class="f-bar" aria-hidden="true"><i id="fBar"></i></div>
+  <div class="f-stage" id="fStage" aria-live="polite"></div>
+  <div class="f-res" id="fRes" hidden>
+    <div class="f-media" id="fMedia"></div>
+    <div class="f-info">
+      <p class="f-kick" id="fNo">N°01 · Your flavor</p>
+      <h2 id="fName">Mango Ice</h2>
+      <p class="f-why" id="fWhy"></p>
+      <div class="f-meta"><span id="fMg">20 mg</span><b id="fPrice">$14</b></div>
+      <div class="f-btns">
+        <button type="button" class="add" id="fAdd">Add to bag</button>
+        <button type="button" class="ghost" id="fOpen">See it up close</button>
+      </div>
+      <button type="button" class="f-back" id="fRetake">↺ Take it again</button>
+    </div>
+  </div>
+  <video id="fSmoke" class="f-smoke" muted playsinline preload="auto" aria-hidden="true"></video>
+</section>
+
+<!-- device story: one take, scrubbed by scroll -->
+<section id="story" role="dialog" aria-modal="true" aria-labelledby="sName" hidden>
+  <div class="s-scroll" id="sScroll">
+    <div class="s-track">
+      <div class="s-stage">
+        <canvas id="sCanvas" aria-hidden="true"></canvas>
+        <div class="s-shade" aria-hidden="true"></div>
+        <div class="g-grain" aria-hidden="true"></div>
+        <div class="s-head" id="sHead">
+          <p class="s-kick" id="sKick">N°09 · Pod system</p>
+          <h2 id="sName">NUBE Stick</h2>
+          <p class="s-hint">Scroll <i>to bring it to life</i></p>
+        </div>
+        <div class="s-ch" data-a=".08" data-b=".34"><p class="s-num">01 — Wake</p><h3>It <i>wakes.</i></h3><p class="s-copy" data-k="wake"></p></div>
+        <div class="s-ch" data-a=".38" data-b=".64"><p class="s-num">02 — Heat</p><h3>It <i>warms.</i></h3><p class="s-copy" data-k="heat"></p></div>
+        <div class="s-ch" data-a=".68" data-b=".9"><p class="s-num">03 — Cloud</p><h3>It <i>clouds.</i></h3><p class="s-copy" data-k="cloud"></p></div>
+        <div class="s-end" id="sEnd">
+          <div class="specs" id="sSpecs"></div>
+          <div class="s-buy"><b id="sPrice">$29</b><button type="button" class="add" id="sAdd">Add to bag</button><button type="button" class="ghost" id="sNext">Next story →</button></div>
+        </div>
+        <div class="s-rail" aria-hidden="true"><i id="sRail"></i><u style="top:21%"></u><u style="top:51%"></u><u style="top:79%"></u></div>
+        <p class="s-load" id="sLoad">Loading <span id="sPct">00</span></p>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="d-close s-close" id="sClose" aria-label="Close story">×</button>
+</section>
+
+<!-- 18+ gate + vapor intro -->
+<section id="gate" role="dialog" aria-modal="true" aria-labelledby="gTitle">
+  <video id="vIn" muted playsinline preload="auto" aria-hidden="true"></video>
+  <video id="vOut" muted playsinline preload="auto" aria-hidden="true"></video>
+  <div class="g-grain" aria-hidden="true"></div>
+  <div class="g-in">
+    <p class="g-kick">Flavor Atlas · Vol. 01</p>
+    <h1 id="gTitle">NUBE</h1>
+    <p class="g-q">This atlas shows nicotine products.<br>Are you 18 or older?</p>
+    <div class="g-btns">
+      <button type="button" id="gYes" disabled>Loading <span id="gPct">00</span></button>
+      <a href="https://www.google.com" id="gNo">Leave</a>
+    </div>
+    <p class="g-fine">Nicotine is an addictive chemical.</p>
+  </div>
+</section>
+
+<script src="app.js?v=20"></script>
+</body>
+</html>
